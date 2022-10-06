@@ -1,0 +1,33 @@
+version: "3.9"
+
+networks:
+    tpapp-network: {}
+
+volumes:
+    tpapp-mysql-data:
+    
+services:
+    tpapp-mysql:
+        image: mysql        
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 1
+            MYSQL_DATABASE: tpappdb 
+            MYSQL_USER: tpapp-admin
+            MYSQL_PASSWORD: tpapp-password
+        volumes:
+            - tpapp-mysql-data:/var/lib/mysql
+        networks:
+            - tpapp-network
+    tpapp-main:        
+        image: romainguinais/img-yzrg
+        depends_on: 
+            - tpapp-mysql
+        environment:
+            DB_HOST: tpapp-mysql
+            DB_NAME: tpappdb
+            DB_USER: tpapp-admin
+            DB_PASSWORD: tpapp-password
+        ports:
+            - '3000:3000'
+        networks:
+            - tpapp-network
