@@ -1,0 +1,34 @@
+version: "3.9"
+
+networks:
+  app-main: {}
+
+volumes:
+  tp_app:
+
+services:
+  mysqlservice:
+    image: mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: not24get
+    networks:
+      - app-main
+
+  app-main:
+    image: allaniia/tp_app:latest
+    depends_on:
+      - mysqlservice
+    environment:
+      DB_HOST: mysqlservice
+      DB_NAME: appdb
+      DB_USER: user
+      DB_PASSWORD: not24get
+    ports: 
+      - 6001:3000
+    volumes:
+      - tp_app:/tp_app
+    networks:
+      -  app-main
