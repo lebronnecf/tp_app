@@ -1,10 +1,13 @@
 const express = require("express");
 const { Sequelize, DataTypes } = require("sequelize");
+const fs = require("fs");
+
+const dbPass = process.env.DB_PASSWORD_FILE ? fs.readFileSync(process.env.DB_PASSWORD_FILE, 'utf-8') : process.env.DB_PASSWORD;
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  dbPass,
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 3306,
