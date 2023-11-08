@@ -1,0 +1,49 @@
+
+version: '1'
+services:
+
+  db:
+    image: yobasystems/alpine-mariadb
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: test
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123456
+    expose:
+      - 3306
+    ports:
+      - '3306:3306'
+    # volumes:
+    #   - /data/example/mysql:/var/lib/mysql
+    restart: always
+
+    networks:
+      - dbpath
+
+  tp_2022_devops:
+    container_name: tp_devops
+    depends_on:
+      - db
+    image: jai20aubts/tp_2022_devops
+
+    ports: 
+      - '3000:3000'
+    command:
+          - /bin/sh
+          - -c
+          - |
+            sleep 10s
+            node index.js
+    restart: always
+    links:
+      - db
+    networks:
+      - dbpath
+
+
+networks:
+  dbpath:
+
+
+
